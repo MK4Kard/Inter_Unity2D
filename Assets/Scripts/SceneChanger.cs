@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class SceneChanger : MonoBehaviour
+{
+    private Animator anim;
+    public int levelToLoad;
+
+    public GameObject loadingScreen;
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
+
+    public void FadeToLevel()
+    {
+        anim.SetTrigger("fade");
+    }
+
+    public void OnFadeComplete()
+    {
+        SceneManager.LoadScene(levelToLoad);
+        StartCoroutine(LoadingScreenOnFade());
+    }
+
+    IEnumerator LoadingScreenOnFade()
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(levelToLoad);
+        loadingScreen.SetActive(true);
+        yield return null;
+    }
+}
