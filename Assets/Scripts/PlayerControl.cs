@@ -5,28 +5,61 @@ using UnityEngine.InputSystem;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float speed;
+    public static PlayerControl Instance { get; private set; }
+
+    [SerializeField] private float speed = 4f;
 
     private Rigidbody2D rb;
-    float vertical;
-    float horizontal;
+    private float minMovingSpeed = 0.1f;
+    private bool isRunning = false;
+    private Vector2 lookDirection;
 
-    private void Start()
+    private void Awake()
     {
+        Instance = this;
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-            horizontal = -1f;
-        else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-            horizontal = 1f;
-        else if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
-            vertical = 1f;
-        else if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
-            vertical = -1f;
+        HandleMovement();
+    }
 
-        rb.linearVelocity = new Vector2 (horizontal * speed, vertical * speed);
+    private void HandleMovement()
+    {
+        Vector2 inputVector = GameInput.Instance.GetMovementVector();
+        inputVector = inputVector.normalized;
+        rb.MovePosition(rb.position + inputVector * (speed * Time.fixedDeltaTime));
+
+        if (Mathf.Abs(inputVector.x) > minMovingSpeed || Mathf.Abs(inputVector.y) > minMovingSpeed) {
+            isRunning = true;
+        } else {
+            isRunning = false;
+        }
+
+        UpdateLookDirection();
+    }
+
+    private void UpdateLookDirection()
+    {
+        Vector3 mousePos = GameInput.Instance.GetMousePosition();
+        Vector3 playerPos = transform.position;
+        lookDirection = (mousePos - playerPos).normalized;
+
+        Debug.Log($"Игрок={playerPos}, Мышь={mousePos}, Направление={lookDirection}");
+    }
+
+    public bool IsRunning() {
+        return isRunning;
+    }
+
+    public Vector3 GetLookDirection()
+    {
+        return lookDirection;
+    }
+
+    public Vector3 GetPlayerScreenPosition()
+    {
+        return transform.position;
     }
 }
