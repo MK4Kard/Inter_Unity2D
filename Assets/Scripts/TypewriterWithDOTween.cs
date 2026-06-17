@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class TypewriterWithDOTween : MonoBehaviour
@@ -12,9 +13,11 @@ public class TypewriterWithDOTween : MonoBehaviour
     public float delayBeforeShow = 3f;
     public bool autoClose = true;
     public bool waitForSpace = false;
+    public UnityEvent onTypingComplete;
 
     private bool isTyping = true;
     private bool isClosed = false;
+    private bool isFull = false;
     private GameSettings settings;
     private Tween typingTween;
 
@@ -72,11 +75,19 @@ public class TypewriterWithDOTween : MonoBehaviour
     void Update()
     {
         // Проверяем условия для закрытия по пробелу
-        if (waitForSpace && !isTyping && !isClosed && textCanvas.gameObject.activeSelf)
+        if (waitForSpace && !isClosed && textCanvas.gameObject.activeSelf && 
+            Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            // Проверяем нажатие пробела через новую систему ввода
-            if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (!isFull)
             {
+                typingTween?.Kill();
+                textComponent.text = fullText;
+                isTyping = false;
+                isFull = true;
+            }
+            else
+            {
+                onTypingComplete?.Invoke();
                 CloseText();
             }
         }
