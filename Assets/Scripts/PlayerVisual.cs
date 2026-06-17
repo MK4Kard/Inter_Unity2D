@@ -28,10 +28,6 @@ public class PlayerVisual : MonoBehaviour
             lookDirection = Vector2.right;
         }
 
-        Debug.Log($"=== ОТЛАДКА ===");
-        Debug.Log($"Направление: X={lookDirection.x:F3}, Y={lookDirection.y:F3}");
-        Debug.Log($"Должно быть: мышь слева -> угол ~180°, мышь справа -> угол ~0°");
-
         animator.SetFloat(FACE_X, lookDirection.x);
         animator.SetFloat(FACE_Y, lookDirection.y);
     }

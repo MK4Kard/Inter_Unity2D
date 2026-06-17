@@ -45,8 +45,6 @@ public class PlayerControl : MonoBehaviour
         Vector3 mousePos = GameInput.Instance.GetMousePosition();
         Vector3 playerPos = transform.position;
         lookDirection = (mousePos - playerPos).normalized;
-
-        Debug.Log($"Игрок={playerPos}, Мышь={mousePos}, Направление={lookDirection}");
     }
 
     public bool IsRunning() {

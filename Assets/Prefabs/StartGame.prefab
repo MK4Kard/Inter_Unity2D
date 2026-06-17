@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartNewGameScript
   levelToLoad: 1
+  loadingScreen: {fileID: 5090974666117415900, guid: 1f96a2c335495a64e9f22b57af686b62, type: 3}
 --- !u!95 &267836603969809329
 Animator:
   serializedVersion: 7

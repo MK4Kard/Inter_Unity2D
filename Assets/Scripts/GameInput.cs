@@ -46,8 +46,6 @@ public class GameInput : MonoBehaviour
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0));
         worldPos.z = 0;
 
-        Debug.Log($"Мышь: экран={mouseScreenPosition}, мир={worldPos}");
-
         return worldPos;
     }
 }
